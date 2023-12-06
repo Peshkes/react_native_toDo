@@ -1,4 +1,4 @@
-import {FlatList, StyleSheet, View} from 'react-native';
+import {Alert, FlatList, StyleSheet, View} from 'react-native';
 import {useState} from "react";
 import Header from "./components/header";
 import TodoItem from "./components/todoItem";
@@ -15,8 +15,14 @@ export default function App() {
         setTodos(prevState => prevState.filter(item => item.key !== key))
     }
     const submitHandler = (text) => {
-        setTodos(prevState => [{text: text, key:count + 1},...prevState]);
-        setCount(prevState => ++prevState);
+        if (text.length > 3){
+            setTodos(prevState => [{text: text, key:count + 1},...prevState]);
+            setCount(prevState => ++prevState);
+        } else {
+            Alert.alert('Ops..', "Task must be more than 3 letters", [
+                {text: 'Understood'}
+            ]);
+        }
     }
     return (
         <View style={styles.container}>
