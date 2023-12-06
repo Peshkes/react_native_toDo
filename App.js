@@ -1,4 +1,4 @@
-import {Alert, FlatList, StyleSheet, View} from 'react-native';
+import {Alert, FlatList, Keyboard, StyleSheet, TouchableWithoutFeedback, View} from 'react-native';
 import {useState} from "react";
 import Header from "./components/header";
 import TodoItem from "./components/todoItem";
@@ -15,8 +15,8 @@ export default function App() {
         setTodos(prevState => prevState.filter(item => item.key !== key))
     }
     const submitHandler = (text) => {
-        if (text.length > 3){
-            setTodos(prevState => [{text: text, key:count + 1},...prevState]);
+        if (text.length > 3) {
+            setTodos(prevState => [{text: text, key: count + 1}, ...prevState]);
             setCount(prevState => ++prevState);
         } else {
             Alert.alert('Ops..', "Task must be more than 3 letters", [
@@ -25,30 +25,38 @@ export default function App() {
         }
     }
     return (
-        <View style={styles.container}>
-            <Header/>
-            <View style={styles.content}>
-                <AddTodo submitHandler={submitHandler}/>
-                <View style={styles.list}>
-                    <FlatList
-                        data={todos}
-                        renderItem={({item}) => (
-                            <TodoItem item={item} pressHandler={pressHandler}/>
-                        )}/>
+        <TouchableWithoutFeedback onPress={()=>{
+            Keyboard.dismiss();
+        }}>
+            <View style={styles.container}>
+                <Header/>
+                <View style={styles.content}>
+                    <AddTodo submitHandler={submitHandler}/>
+                    <View style={styles.list}>
+                        <FlatList
+                            showsVerticalScrollIndicator={false}
+                            data={todos}
+                            renderItem={({item}) => (
+                                <TodoItem item={item} pressHandler={pressHandler}/>
+                            )}/>
+                    </View>
                 </View>
             </View>
-        </View>
+        </TouchableWithoutFeedback>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
+        flex: 1,
         backgroundColor: '#fff',
     },
     content: {
-        padding: 40
+        flex: 1,
+        padding: 40,
     },
     list: {
-        marginTop: 20
+        marginTop: 20,
+        flex: 1,
     }
 });
